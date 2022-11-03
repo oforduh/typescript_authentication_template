@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import {
   getModelForClass,
   modelOptions,
@@ -5,8 +6,15 @@ import {
   Severity,
   index,
   pre,
+  DocumentType,
 } from "@typegoose/typegoose";
 import bcrypt from "bcryptjs";
+
+import jwt, { Secret } from "jsonwebtoken";
+
+interface UserToken {
+  token: string;
+}
 
 @index({ email: 1 })
 @modelOptions({
@@ -62,6 +70,24 @@ export class User {
 
   @prop({ required: true, unique: true })
   phoneNumber: string;
+
+  @prop({ type: mongoose.Schema.Types.Mixed })
+  tokens: UserToken[];
+
+  // Generate jwt auth token for user instance
+  public async generateAuthToken(this: DocumentType<User>) {
+    const user = this;
+    const _id = user._id.toString();
+
+    const token = jwt.sign({ _id }, process.env.JWT_SECRET as Secret);
+
+    // concat this is used to put an object inside an array
+    user.tokens = user.tokens.concat({ token });
+
+    await user.save();
+
+    return token;
+  }
 }
 
 const UserModel = getModelForClass(User);

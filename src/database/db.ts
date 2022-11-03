@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 import path from "path";
-dotenv.config();
 
+// if you add something to env example and it is not in env it will throw an example
 // import .env variables
 require("dotenv-safe").config({
   path: path.join(__dirname, "../../.env"),

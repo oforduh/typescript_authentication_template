@@ -1,18 +1,14 @@
 import express from "express";
 import "express-async-errors";
-
 import compress from "compression";
 import morgan from "morgan";
 import cors from "cors";
 import helmet from "helmet";
 import { allowCompression } from "../helpers/compress";
-import dotenv from "dotenv";
-import { dbConnection } from "../database/db";
 import { errorHandler } from "../middlewares/errorHandler";
 import authRouter from "../api/auth/auth.routes";
 import { NotFoundError } from "../errors/notFound.error";
-
-dotenv.config();
+import { dbConnection } from "../database/db";
 dbConnection();
 
 const app = express();
