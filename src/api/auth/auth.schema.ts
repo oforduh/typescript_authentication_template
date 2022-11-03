@@ -44,10 +44,10 @@ export const signinSchema = [
     .isEmail()
     .normalizeEmail()
     .trim()
-    .withMessage("Incorrect email or password"),
+    .withMessage("Incorrect email"),
 
   body("password")
     .trim()
     .isLength({ min: 2 })
-    .withMessage("Incorrect email or password"),
+    .withMessage("password should not be less than"),
 ];
