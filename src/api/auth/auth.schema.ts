@@ -38,3 +38,16 @@ export const createUserSchema = [
     .withMessage("Password is required"),
   // .isStrongPassword(),
 ];
+
+export const signinSchema = [
+  body("email")
+    .isEmail()
+    .normalizeEmail()
+    .trim()
+    .withMessage("Incorrect email or password"),
+
+  body("password")
+    .trim()
+    .isLength({ min: 2 })
+    .withMessage("Incorrect email or password"),
+];

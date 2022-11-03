@@ -28,13 +28,6 @@ export const successfulRequest = ({ res, message, entity, data }: Args) => {
 };
 
 export const resourceCreated = ({ res, message, entity, data }: Args) => {
-  console.log(
-    "Resource Created. Message: %o, Entity: %o, Data: %o",
-    message,
-    entity,
-    data
-  );
-
   res.status(status.CREATED).send({
     status: true,
     message,

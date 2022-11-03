@@ -7,10 +7,12 @@ import {
   index,
   pre,
   DocumentType,
+  ReturnModelType,
 } from "@typegoose/typegoose";
 import bcrypt from "bcryptjs";
-
 import jwt, { Secret } from "jsonwebtoken";
+import response from "../middlewares/responses";
+import { Response } from "express";
 
 interface UserToken {
   token: string;
@@ -27,6 +29,7 @@ interface UserToken {
         delete ret._id;
         delete ret.updatedAt;
         delete ret.createdAt;
+        delete ret.tokens;
       },
       versionKey: false,
     },
@@ -71,7 +74,7 @@ export class User {
   @prop({ required: true, unique: true })
   phoneNumber: string;
 
-  @prop({ type: mongoose.Schema.Types.Mixed })
+  @prop({})
   tokens: UserToken[];
 
   // Generate jwt auth token for user instance
@@ -87,6 +90,27 @@ export class User {
     await user.save();
 
     return token;
+  }
+
+  // check if the credentials already exist in the database using static method
+  public static async findByCredentials(
+    // the "this" definition is required to have the correct types
+    this: ReturnModelType<typeof User>,
+    email: string,
+    password: string
+  ) {
+    // validation check for email
+    const user = await this.findOne({
+      email,
+    });
+    if (!user) return null;
+    console.log("email test passed");
+
+    // validation check for password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return null;
+    console.log("password test passed");
+    return user;
   }
 }
 

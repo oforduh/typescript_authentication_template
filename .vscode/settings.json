@@ -1,10 +1,11 @@
 {
-    "cSpell.ignoreWords": [
-        "codepaths",
-        "middlewares",
-        "phonenumber",
-        "pino",
-        "sendgrid",
-        "tsbuildinfo"
-    ]
+  "cSpell.ignoreWords": [
+    "codepaths",
+    "middlewares",
+    "phonenumber",
+    "pino",
+    "sendgrid",
+    "signin",
+    "tsbuildinfo"
+  ]
 }
