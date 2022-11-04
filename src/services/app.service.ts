@@ -29,7 +29,7 @@ app.use(helmet());
 app.use(cors());
 
 // mount api v1 routes
-app.use("/v1", authRouter);
+app.use("/v1/auth", authRouter);
 
 app.all("*", () => {
   throw new NotFoundError("Route Not Found");

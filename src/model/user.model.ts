@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import {
   getModelForClass,
   modelOptions,
@@ -11,10 +10,9 @@ import {
 } from "@typegoose/typegoose";
 import bcrypt from "bcryptjs";
 import jwt, { Secret } from "jsonwebtoken";
-import response from "../middlewares/responses";
-import { Response } from "express";
 
-interface UserToken {
+// check auth.ts in middleware folder
+export interface UserToken {
   token: string;
 }
 
@@ -24,12 +22,12 @@ interface UserToken {
     timestamps: true,
     toJSON: {
       transform(doc: any, ret: any) {
-        console.log(ret);
         ret.id = ret._id;
         delete ret._id;
+        delete ret.tokens;
+        delete ret.password;
         delete ret.updatedAt;
         delete ret.createdAt;
-        delete ret.tokens;
       },
       versionKey: false,
     },
@@ -74,6 +72,9 @@ export class User {
   @prop({ required: true, unique: true })
   phoneNumber: string;
 
+  @prop({ default: false })
+  isVerified: boolean;
+
   @prop({})
   tokens: UserToken[];
 
@@ -82,7 +83,9 @@ export class User {
     const user = this;
     const _id = user._id.toString();
 
-    const token = jwt.sign({ _id }, process.env.JWT_SECRET as Secret);
+    const token = jwt.sign({ _id }, process.env.JWT_SECRET as Secret, {
+      expiresIn: "7d",
+    });
 
     // concat this is used to put an object inside an array
     user.tokens = user.tokens.concat({ token });
@@ -104,12 +107,11 @@ export class User {
       email,
     });
     if (!user) return null;
-    console.log("email test passed");
 
     // validation check for password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return null;
-    console.log("password test passed");
+
     return user;
   }
 }

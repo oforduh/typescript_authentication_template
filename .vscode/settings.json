@@ -1,11 +1,19 @@
 {
   "cSpell.ignoreWords": [
+    "bgcolor",
+    "cellpadding",
+    "cellspacing",
     "codepaths",
+    "lspace",
     "middlewares",
+    "muid",
     "phonenumber",
     "pino",
+    "preheader",
+    "rspace",
     "sendgrid",
     "signin",
-    "tsbuildinfo"
+    "tsbuildinfo",
+    "valign"
   ]
 }

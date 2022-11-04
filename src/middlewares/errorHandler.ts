@@ -6,6 +6,7 @@ import { handleDuplicateError } from "../errors/handleDuplicateError.error";
 export interface DuplicateKey {
   email?: number | string;
   phonenumber?: number | string;
+  username?: number | string;
 }
 
 export interface DuplicateErrorException extends Error {
@@ -22,27 +23,27 @@ export const errorHandler = (
   next: NextFunction
 ) => {
   if (err instanceof CustomError) {
-    console.log(
-      "User Error. Status: %o, Error: %o",
-      err.statusCode,
-      err.serializeErrors()
-    );
+    // console.log(
+    //   "User Error. Status: %o, Error: %o",
+    //   err.statusCode,
+    //   err.serializeErrors()
+    // );
     return res.status(err.statusCode).send(err.serializeErrors());
   }
 
   if (err.code === 11000) return handleDuplicateError(err, res);
 
-  console.log(
-    "Application Error. Message: %o, Stack: %o, Error: %o",
-    err.message,
-    err.stack,
-    err
-  );
+  // console.log(
+  //   "Application Error. Message: %o, Stack: %o, Error: %o",
+  //   err.message,
+  //   err.stack,
+  //   err
+  // );
 
   res.status(INTERNAL_SERVER_ERROR).send({
     status: false,
     message: err.message || "Something went wrong",
-    stack: err.stack,
+    // stack: err.stack,
     err: err,
   });
 };

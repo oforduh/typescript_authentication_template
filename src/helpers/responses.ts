@@ -12,13 +12,6 @@ interface Args {
 }
 
 export const successfulRequest = ({ res, message, entity, data }: Args) => {
-  console.log(
-    "Successful Request. Message: %o, Entity: %o, Data: %o",
-    message,
-    entity,
-    data
-  );
-
   res.status(status.OK).send({
     status: true,
     message,
