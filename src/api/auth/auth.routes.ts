@@ -8,6 +8,7 @@ import {
   signOut,
   verifyEmail,
   handleLogoutAllDevices,
+  change_password,
   test,
 } from "./auth.controller";
 import { createUserSchema, signinSchema } from "./auth.schema";
@@ -98,7 +99,7 @@ router
   .route("/:token/verifyEmail")
   /**
   //    * @public
-  //    * @api {get} /verify
+  //    * @api {get} /:token/verify
   //    * @apiDescription verifies a user email when the link is clicked
   //    * @apiVersion 1.0.0
   //    * @apiName verify user Email
@@ -109,6 +110,22 @@ router
   //    * @apiError (Forbidden 500)    Internal Server Error    Server encountered issues
 */
   .get(verifyEmail);
+
+router
+  .route("/reset_pwd")
+  /**
+  //    * @public
+  //    * @api {get} /verify
+  //    * @apiDescription verifies a user email when the link is clicked
+  //    * @apiVersion 1.0.0
+  //    * @apiName verify user Email
+  //    * @apiGroup private
+  //    * @apiPermission private
+
+  //    * @returns  {object}
+  //    * @apiError (Forbidden 500)    Internal Server Error    Server encountered issues
+*/
+  .post(change_password);
 
 router.route("/test").get(auth, test);
 
