@@ -1,4 +1,7 @@
-import { MailParams } from "./../../emails/config/sendGrid.config";
+import {
+  MailParams,
+  sendRecoverPasswordMail,
+} from "./../../emails/config/sendGrid.config";
 import { UserToken } from "./../../model/user.model";
 import { Request, Response } from "express";
 import response from "../../helpers/responses";
@@ -8,6 +11,7 @@ import { capitalizeFirstLetter as cfl } from "../../helpers/capitalizeFirstLette
 import { generateConfirmationToken } from "../../helpers/generateEmailConfirmationToken";
 import VerificationEmailModel from "../../model/verificationEmailToken.model";
 import bcrypt from "bcryptjs";
+import { generatePasswordResetToken } from "../../helpers/generatePasswordReset";
 
 export const signUp = async (req: Request, res: Response) => {
   const input: Partial<User> = req.body;
@@ -23,7 +27,7 @@ export const signUp = async (req: Request, res: Response) => {
     const newUser = await UserModel.create(input);
 
     const name = `${cfl(newUser.fName)} ${cfl(newUser.lName)}`;
-    const email = `${newUser.email}`;
+    const email = process.env.SENDER_EMAIL;
     const EmailToken = await generateConfirmationToken(newUser);
     const link = `http://${req.headers.host}/v1/auth/${EmailToken}/verifyEmail`;
 
@@ -81,7 +85,6 @@ export const verifyEmail = async (req: Request, res: Response) => {
 export const signIn = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    console.log(email, password);
 
     const user = await UserModel.findByCredentials(email, password);
 
@@ -152,7 +155,7 @@ export const change_password = async (req: Request, res: Response) => {
     if (same_password)
       return response.badRequest({
         res,
-        message: "New Password cannot be the same as the old password",
+        message: "New password cannot be the same as the old password",
         error: "Could not update password",
       });
 
@@ -162,6 +165,38 @@ export const change_password = async (req: Request, res: Response) => {
     response.resourceCreated({
       res,
       message: "Password updated successfully",
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const recoverPassword = async (req: Request, res: Response) => {
+  const { email } = req.body;
+  try {
+    const user = await UserModel.findOne({ email });
+    if (!user)
+      return response.notFound({
+        res,
+        message: "No user is associated with that email address",
+      });
+
+    const passwordResetToken = await generatePasswordResetToken(user);
+
+    const link = `http://${req.headers.host}/v1/auth/resetPassword/${passwordResetToken}`;
+
+    const name = `${cfl(user.fName)} ${cfl(user.lName)}`;
+    const args: MailParams = {
+      name,
+      email: process.env.SENDER_EMAIL,
+      link: link,
+    };
+
+    await sendRecoverPasswordMail(args);
+    response.successfulRequest({
+      res,
+      message: "Email sent",
+      data: link,
     });
   } catch (error) {
     throw error;

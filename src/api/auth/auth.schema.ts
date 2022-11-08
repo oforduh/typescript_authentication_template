@@ -63,3 +63,6 @@ export const changePasswordSchema = [
     .isLength({ min: 2 })
     .withMessage("password should not be less than 2"),
 ];
+export const recoverPasswordSchema = [
+  body("email").isEmail().normalizeEmail().trim().withMessage("Invalid email"),
+];

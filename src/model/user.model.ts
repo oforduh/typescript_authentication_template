@@ -95,6 +95,23 @@ export class User {
     return token;
   }
 
+  // Generate jwt auth token for user instance
+  public async generatePasswordReset(this: DocumentType<User>) {
+    const user = this;
+    const _id = user._id.toString();
+
+    const token = jwt.sign({ _id }, process.env.JWT_SECRET as Secret, {
+      expiresIn: "7d",
+    });
+
+    // concat this is used to put an object inside an array
+    user.tokens = user.tokens.concat({ token });
+
+    await user.save();
+
+    return token;
+  }
+
   // check if the credentials already exist in the database using static method
   public static async findByCredentials(
     // the "this" definition is required to have the correct types

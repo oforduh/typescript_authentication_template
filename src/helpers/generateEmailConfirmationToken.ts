@@ -2,7 +2,7 @@ import VerificationEmailModel from "../model/verificationEmailToken.model";
 import { DocumentType } from "@typegoose/typegoose";
 
 import crypto from "crypto";
-import UserModel, { User } from "../model/user.model";
+import { User } from "../model/user.model";
 
 export const generateConfirmationToken = async (
   user: DocumentType<User>

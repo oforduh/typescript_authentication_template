@@ -9,12 +9,14 @@ import {
   verifyEmail,
   handleLogoutAllDevices,
   change_password,
+  recoverPassword,
   test,
 } from "./auth.controller";
 import {
   createUserSchema,
   signinSchema,
   changePasswordSchema,
+  recoverPasswordSchema,
 } from "./auth.schema";
 
 const router = express.Router();
@@ -119,17 +121,33 @@ router
   .route("/change_pwd")
   /**
   //    * @public
-  //    * @api {get} /verify
+  //    * @api {get} /change_pwd
   //    * @apiDescription verifies a user email when the link is clicked
   //    * @apiVersion 1.0.0
-  //    * @apiName verify user Email
-  //    * @apiGroup private
-  //    * @apiPermission private
+  //    * @apiName changes a user password
+  //    * @apiGroup Auth
+  //    * @apiPermission authorized user
 
   //    * @returns  {object}
   //    * @apiError (Forbidden 500)    Internal Server Error    Server encountered issues
 */
   .post(auth, changePasswordSchema, validateRequest, change_password);
+
+router
+  .route("/forgot_pwd")
+  /**
+  //    * @public
+  //    * @api {get} /forgot_pwd
+  //    * @apiDescription sends a link to a user to change his password
+  //    * @apiVersion 1.0.0
+  //    * @apiName verify user Email
+  //    * @apiGroup public
+  //    * @apiPermission public
+
+  //    * @returns  {object}
+  //    * @apiError (Forbidden 500)    Internal Server Error    Server encountered issues
+*/
+  .post(recoverPasswordSchema, validateRequest, recoverPassword);
 
 router.route("/test").get(auth, test);
 
