@@ -146,7 +146,7 @@ export const change_password = async (req: Request, res: Response) => {
       return response.badRequest({
         res,
         message: "Incorrect Password",
-        error: "Could not update password",
+        error: "Enter old password",
       });
 
     if (same_password)

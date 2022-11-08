@@ -11,7 +11,11 @@ import {
   change_password,
   test,
 } from "./auth.controller";
-import { createUserSchema, signinSchema } from "./auth.schema";
+import {
+  createUserSchema,
+  signinSchema,
+  changePasswordSchema,
+} from "./auth.schema";
 
 const router = express.Router();
 
@@ -112,7 +116,7 @@ router
   .get(verifyEmail);
 
 router
-  .route("/reset_pwd")
+  .route("/change_pwd")
   /**
   //    * @public
   //    * @api {get} /verify
@@ -125,7 +129,7 @@ router
   //    * @returns  {object}
   //    * @apiError (Forbidden 500)    Internal Server Error    Server encountered issues
 */
-  .post(change_password);
+  .post(auth, changePasswordSchema, validateRequest, change_password);
 
 router.route("/test").get(auth, test);
 

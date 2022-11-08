@@ -51,3 +51,15 @@ export const signinSchema = [
     .isLength({ min: 2 })
     .withMessage("password should not be less than"),
 ];
+
+export const changePasswordSchema = [
+  body("old_password")
+    .trim()
+    .isLength({ min: 2 })
+    .withMessage("password should not be less than 2"),
+
+  body("new_password")
+    .trim()
+    .isLength({ min: 2 })
+    .withMessage("password should not be less than 2"),
+];
